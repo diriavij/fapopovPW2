@@ -14,12 +14,13 @@ class WishMakerViewController: UIViewController {
     
     private let titleView = UILabel()
     private let descriptionView = UILabel()
-    private let modeSwitcher = UIButton()
+    private let modeSwitcher: UIButton = UIButton(type: .system)
     private var currentMode = 1
     private let stack = UIStackView()
     private let hexField = UITextField()
     private let hexText = UILabel()
-    private let randomButton = UIButton()
+    private let randomButton: UIButton = UIButton(type: .system)
+    private let addWishButton: UIButton = UIButton(type: .system)
     
     // MARK: - Constants
     
@@ -33,6 +34,7 @@ class WishMakerViewController: UIViewController {
         static let switchText: String = "Switch Mode"
         static let randomText: String = "RANDOM COLOR"
         static let titleText: String = "WishMaker"
+        static let addWishText: String = "MY WISHES"
         
         static let titleWeight: CGFloat = 5
         static let titleSize: CGFloat = 32
@@ -60,10 +62,10 @@ class WishMakerViewController: UIViewController {
         static let thirdMode: Int = 3
         
         static let hexTextLeftOffset: Double = 20
-        static let hexTextBottomOffset: Double = 250
+        static let hexTextBottomOffset: Double = 300
         
         static let hexFieldLeftOffset: Double = 100
-        static let hexFieldBottomOffset: Double = 200
+        static let hexFieldBottomOffset: Double = 250
         
         static let titleViewTopOffset: Double = 30
         static let titleViewLeftOffset: Double = 20
@@ -71,14 +73,18 @@ class WishMakerViewController: UIViewController {
         static let descriptionViewTopOffset: Double = 20
         static let descriptionViewLeftOffset: Double = 20
         
-        static let modeSwitcherBottomOffset: Double = 300
+        static let modeSwitcherBottomOffset: Double = 350
         static let modeSwitcherLeftOffset: Double = 60
         
-        static let randomButtonBottomOffset: Double = 200
+        static let randomButtonBottomOffset: Double = 250
         static let randomButtonLeftOffset: Double = 60
         
-        static let slidersStackBottomOffset: Double = 40
+        static let slidersStackBottomOffset: Double = 10
         static let slidersStackLeftOffset: Double = 20
+        
+        static let addWishButtonSide: Double = 20
+        static let addWishButtonHeight: Double = 40
+        static let addWishButtonBottom: Double = 40
     }
     
     // MARK: - Lifecycle
@@ -94,6 +100,7 @@ class WishMakerViewController: UIViewController {
         view.backgroundColor = Const.firstColor
         configureTitle()
         configureDescription()
+        configureAddWishButton()
         configureSliders()
         configureButtons()
         configureTextField()
@@ -182,6 +189,20 @@ class WishMakerViewController: UIViewController {
         randomButton.isHidden = true
     }
     
+    private func configureAddWishButton() {
+        view.addSubview(addWishButton)
+        addWishButton.setHeight(Const.addWishButtonHeight)
+        addWishButton.pinBottom(to: view.bottomAnchor, Const.addWishButtonBottom)
+        addWishButton.pinHorizontal(to: view, Const.addWishButtonSide)
+        
+        addWishButton.backgroundColor = .white
+        addWishButton.setTitleColor(.systemPink, for: .normal)
+        addWishButton.setTitle(Const.addWishText, for: .normal)
+        
+        addWishButton.layer.cornerRadius = Const.cornerRadius
+        addWishButton.addTarget(self, action: #selector(addWishButtonPressed), for: .touchUpInside)
+    }
+    
     private func configureSliders() {
         stack.axis = .vertical
         view.addSubview(stack)
@@ -198,7 +219,7 @@ class WishMakerViewController: UIViewController {
         
         stack.pinCenterX(to: view.centerXAnchor)
         stack.pinLeft(to: view.leadingAnchor, Const.slidersStackLeftOffset)
-        stack.pinBottom(to: view.bottomAnchor, Const.slidersStackBottomOffset)
+        stack.pinBottom(to: addWishButton.topAnchor, Const.slidersStackBottomOffset)
         
         var red: CGFloat = Const.basicHelper
         var green: CGFloat = Const.basicHelper
@@ -246,6 +267,11 @@ class WishMakerViewController: UIViewController {
             stack.isHidden = false
             randomButton.isHidden = true
         }
+    }
+    
+    @objc
+    private func addWishButtonPressed() {
+        // this will be done later!
     }
     
     @objc private func hexValueWasEntered() {
