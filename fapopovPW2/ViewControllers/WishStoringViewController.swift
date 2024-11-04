@@ -15,6 +15,8 @@ final class WishStoringViewController: UIViewController {
     
     private let table: UITableView = UITableView(frame: .zero)
     private var wishArray: [String] = []
+    private let defaults = UserDefaults.standard
+    
     
     // MARK: - Constants
     
@@ -31,6 +33,7 @@ final class WishStoringViewController: UIViewController {
     
     override func viewDidLoad() {
         view.backgroundColor = Const.backgroundColor
+        wishArray = defaults.array(forKey: "User") as? [String] ?? []
         configureTable()
     }
     
@@ -49,6 +52,7 @@ final class WishStoringViewController: UIViewController {
     
     public func addWishAction(wish: String) {
         wishArray.append(wish)
+        defaults.set(wishArray, forKey: "User")
         table.reloadData()
     }
 }
