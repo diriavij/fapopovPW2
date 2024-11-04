@@ -249,7 +249,8 @@ class WishMakerViewController: UIViewController {
     
     // MARK: - Interactions Processing Methods
     
-    @objc private func buttonWasPressed() {
+    @objc
+    private func buttonWasPressed() {
         if currentMode == Const.firstMode {
             currentMode = Const.secondMode
             stack.isHidden = true
@@ -271,10 +272,11 @@ class WishMakerViewController: UIViewController {
     
     @objc
     private func addWishButtonPressed() {
-        // this will be done later!
+        present(WishStoringViewController(), animated: true)
     }
     
-    @objc private func hexValueWasEntered() {
+    @objc
+    private func hexValueWasEntered() {
         if hexField.text?.count == Const.hexColorLength {
             let newColor = UIColor.convertToRGBInit(hexField.text ?? Const.basicHex)
             view.backgroundColor = newColor
@@ -285,7 +287,8 @@ class WishMakerViewController: UIViewController {
         }
     }
     
-    @objc private func randomButtonWasPressed() {
+    @objc
+    private func randomButtonWasPressed() {
         var hexColor: String = "#"
         for _ in 0...(Const.hexColorLength - 1) {
             let index: Int = .random(in: 0...(Const.digitsHex.count - 1))
