@@ -7,7 +7,7 @@
 
 import UIKit
 
-// MARK: - WishMaker ViewController
+// MARK: - Wish Maker ViewController
 class WishMakerViewController: UIViewController {
     
     // MARK: - UI Elements
