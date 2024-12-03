@@ -21,6 +21,7 @@ class WishCalendarViewController: UIViewController {
     
     private var events: [WishEventModel] = []
     private let defaults = UserDefaults.standard
+    private let calendar = CalendarManager()
     
     // MARK: - Constants
     
@@ -117,6 +118,16 @@ class WishCalendarViewController: UIViewController {
     
     private func addNewEvent(_ newEvent: WishEventModel) {
         events.append(newEvent)
+        let calendarEvent = CalendarEventModel(
+            title: newEvent.title,
+            startDate: newEvent.startDate,
+            endDate: newEvent.endDate,
+            note: newEvent.description
+        )
+        let addingResult = calendar.create(eventModel: calendarEvent)
+        if !addingResult {
+            print("Event wasn't added because an error occured!")
+        }
         collectionView.reloadData()
         let encoder = JSONEncoder()
         if let encodedData = try? encoder.encode(events) {
