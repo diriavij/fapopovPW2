@@ -22,9 +22,10 @@ class WishEventCreationView: UIViewController {
     private let endDateLabel: UILabel = UILabel()
     private let endDateField: UIDatePicker = UIDatePicker()
     private let submitButton: UIButton = UIButton(type: .system)
+    private let titlePickerView = UIPickerView()
     
     private var onSubmit: ((WishEventModel) -> Void)?
-    
+    private var hintTitles: [String] = []
     
     // MARK: - Constants
     
@@ -33,13 +34,13 @@ class WishEventCreationView: UIViewController {
         static let fieldsBackgroundColor: UIColor = .white
         static let fieldsTextColor: UIColor = .black
         static let fieldsHorizontalOffset: Double = 60
-        static let fieldsHieght: Double = 40
+        static let fieldsHeight: Double = 40
         
         static let mainTitle = "Add New Event"
-        static let mainTitleFont: UIFont = .systemFont(ofSize: 32, weight: UIFont.Weight(3))
+        static let mainTitleFont: UIFont = .systemFont(ofSize: 32, weight: .bold)
         static let mainTitleTop: Double = 20
         
-        static let titleFont: UIFont = .systemFont(ofSize: 24, weight: UIFont.Weight(2))
+        static let titleFont: UIFont = .systemFont(ofSize: 24, weight: .semibold)
         static let titleLeft: Double = 30
         static let titleSpacing: Double = 20
         
@@ -48,7 +49,7 @@ class WishEventCreationView: UIViewController {
         static let startDateLabelText = "Start Date:"
         static let endDateLabelText = "End Date:"
         
-        static let titlePlaceholder = "Title"
+        static let titlePlaceholder = "Select Title"
         static let descriptionPlaceholder = "Description"
         
         static let pickerMode: UIDatePicker.Mode = .date
@@ -63,6 +64,7 @@ class WishEventCreationView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = WishMakerViewController.currentColor
+        hintTitles = WishStoringViewController.wishArray
         configureUI()
     }
     
@@ -100,10 +102,14 @@ class WishEventCreationView: UIViewController {
         titleField.layer.cornerRadius = Const.cornerRadius
         titleField.backgroundColor = Const.fieldsBackgroundColor
         titleField.textColor = Const.fieldsTextColor
+        titleField.inputView = titlePickerView
         titleField.pinCenterX(to: view)
         titleField.pinTop(to: titleLabel.bottomAnchor, Const.titleSpacing)
         titleField.setWidth(view.frame.width - Const.fieldsHorizontalOffset)
-        titleField.setHeight(Const.fieldsHieght)
+        titleField.setHeight(Const.fieldsHeight)
+        
+        titlePickerView.delegate = self
+        titlePickerView.dataSource = self
     }
     
     private func configureDescription() {
@@ -122,7 +128,7 @@ class WishEventCreationView: UIViewController {
         descriptionField.pinCenterX(to: view)
         descriptionField.pinTop(to: descriptionLabel.bottomAnchor, Const.titleSpacing)
         descriptionField.setWidth(view.frame.width - Const.fieldsHorizontalOffset)
-        descriptionField.setHeight(Const.fieldsHieght)
+        descriptionField.setHeight(Const.fieldsHeight)
     }
     
     private func configureStartDate() {
@@ -161,7 +167,7 @@ class WishEventCreationView: UIViewController {
     
     private func configureButton() {
         view.addSubview(submitButton)
-        submitButton.setHeight(Const.fieldsHieght)
+        submitButton.setHeight(Const.fieldsHeight)
         submitButton.pinCenterX(to: view)
         submitButton.pinTop(to: endDateField.bottomAnchor, Const.bigSpacing)
         submitButton.setWidth(view.frame.width - Const.buttonHorizontalOffset)
@@ -191,5 +197,24 @@ class WishEventCreationView: UIViewController {
         )
         onSubmit?(newEvent)
         dismiss(animated: true)
+    }
+}
+
+// MARK: - UIPickerViewDelegate & UIPickerViewDataSource
+extension WishEventCreationView: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return hintTitles.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return hintTitles[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        titleField.text = hintTitles[row]
     }
 }

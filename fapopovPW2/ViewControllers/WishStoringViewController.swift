@@ -14,7 +14,7 @@ final class WishStoringViewController: UIViewController {
     // MARK: - UI Elements
     
     private let table: UITableView = UITableView(frame: .zero)
-    private var wishArray: [String] = []
+    static var wishArray: [String] = []
     private let defaults = UserDefaults.standard
     
     
@@ -41,7 +41,7 @@ final class WishStoringViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = WishMakerViewController.currentColor
-        wishArray = defaults.array(forKey: Const.userDefaultsKey) as? [String] ?? []
+        WishStoringViewController.wishArray = defaults.array(forKey: Const.userDefaultsKey) as? [String] ?? []
         configureTable()
     }
     
@@ -61,21 +61,21 @@ final class WishStoringViewController: UIViewController {
     // MARK: - Action Methods
     
     public func addWishAction(wish: String) {
-        wishArray.append(wish)
-        defaults.set(wishArray, forKey: Const.userDefaultsKey)
+        WishStoringViewController.wishArray.append(wish)
+        defaults.set(WishStoringViewController.wishArray, forKey: Const.userDefaultsKey)
         table.reloadData()
     }
     
     public func deleteWishAction(index: Int) {
-        wishArray.remove(at: index)
-        defaults.set(wishArray, forKey: Const.userDefaultsKey)
+        WishStoringViewController.wishArray.remove(at: index)
+        defaults.set(WishStoringViewController.wishArray, forKey: Const.userDefaultsKey)
         table.reloadData()
     }
     
     public func editWishAction(index: Int, wish: String) {
-        wishArray.remove(at: index)
-        wishArray.insert(wish, at: index)
-        defaults.set(wishArray, forKey: Const.userDefaultsKey)
+        WishStoringViewController.wishArray.remove(at: index)
+        WishStoringViewController.wishArray.insert(wish, at: index)
+        defaults.set(WishStoringViewController.wishArray, forKey: Const.userDefaultsKey)
         table.reloadData()
     }
 }
@@ -92,7 +92,7 @@ extension WishStoringViewController: UITableViewDataSource {
         if section == Const.sectionAddWish {
             return 1
         } else {
-            return wishArray.count
+            return WishStoringViewController.wishArray.count
         }
     }
     
@@ -120,7 +120,7 @@ extension WishStoringViewController: UITableViewDataSource {
             
             guard let wishCell = cell as? WrittenWishCell else { return cell }
             
-            wishCell.configure(with: wishArray[indexPath.row], with: indexPath.row)
+            wishCell.configure(with: WishStoringViewController.wishArray[indexPath.row], with: indexPath.row)
             wishCell.configureDeleteWish { [weak self] ind in
                 self?.deleteWishAction(index: ind)
             }
