@@ -17,8 +17,10 @@ class WishCalendarViewController: UIViewController {
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout()
     )
+    private let addButton: UIButton = UIButton(type: .system)
     
-    //private let addButton: UIButton = UIButton(type: .system)
+    private var events: [WishEventModel] = []
+    private let defaults = UserDefaults.standard
     
     // MARK: - Constants
     
@@ -27,30 +29,53 @@ class WishCalendarViewController: UIViewController {
         static let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         static let collectionTop: Double = 10
         
-        static let numberOfItems: Int = 10
         static let cellOffset: CGFloat = 10
         static let cellHeight: CGFloat = 120
         
         static let buttonHeight: Double = 40
+        static let buttonOffset: Double = 15
+        
+        static let buttonColor: UIColor = .white
+        static let buttonTitleColor: UIColor = .black
+        static let buttonTitle = "Add an event"
+        static let buttonCornerRadius: CGFloat = 10
+        
+        static let key = "Events"
     }
-    
+
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = WishMakerViewController.currentColor
-        //configureAddButton()
+        configureAddButton()
         configureCollection()
+        getEventsFromDefaults()
+    }
+    
+    private func getEventsFromDefaults() {
+        let decoder = JSONDecoder()
+        if let savedEvents = UserDefaults.standard.object(forKey: Const.key) as? Data,
+           let loadedEvents = try? decoder.decode([WishEventModel].self, from: savedEvents) {
+            events = loadedEvents
+            return
+        }
+        events = []
     }
     
     // MARK: - Configuring Methods
     
-//    private func configureAddButton() {
-//        view.addSubview(addButton)
-//        addButton.setHeight(Const.buttonHeight)
-//        addButton.pinTop(to: view.safeAreaLayoutGuide.topAnchor)
-//        
-//    }
+    private func configureAddButton() {
+        view.addSubview(addButton)
+        addButton.setHeight(Const.buttonHeight)
+        addButton.pinTop(to: view.safeAreaLayoutGuide.topAnchor)
+        addButton.pinHorizontal(to: view, Const.buttonOffset)
+        addButton.backgroundColor = Const.buttonColor
+        addButton.setTitle(Const.buttonTitle, for: .normal)
+        addButton.setTitleColor(Const.buttonTitleColor, for: .normal)
+        addButton.layer.cornerRadius = Const.buttonCornerRadius
+        addButton.addTarget(self, action: #selector(addButtonWasPressed), for: .touchUpInside)
+    }
     
     private func configureCollection() {
         collectionView.delegate = self
@@ -65,11 +90,12 @@ class WishCalendarViewController: UIViewController {
             WishEventCell.self,
             forCellWithReuseIdentifier: WishEventCell.reuseIdentifier
         )
+        defaults.array(forKey: Const.key)
         
         view.addSubview(collectionView)
         collectionView.pinHorizontal(to: view)
         collectionView.pinBottom(to: view.safeAreaLayoutGuide.bottomAnchor)
-        collectionView.pinTop(to: view.safeAreaLayoutGuide.topAnchor, Const.collectionTop)
+        collectionView.pinTop(to: addButton.bottomAnchor, Const.collectionTop)
     }
     
     private func configureLayoutForCollection() {
@@ -77,6 +103,24 @@ class WishCalendarViewController: UIViewController {
             layout.minimumInteritemSpacing = 0
             layout.minimumLineSpacing = 0
             layout.invalidateLayout()
+        }
+    }
+    
+    // MARK: - Actions
+    
+    @objc
+    private func addButtonWasPressed() {
+        let creation = WishEventCreationView()
+        creation.addDelegate(addNewEvent)
+        present(creation, animated: true)
+    }
+    
+    private func addNewEvent(_ newEvent: WishEventModel) {
+        events.append(newEvent)
+        collectionView.reloadData()
+        let encoder = JSONEncoder()
+        if let encodedData = try? encoder.encode(events) {
+            defaults.set(encodedData, forKey: Const.key)
         }
     }
     
@@ -89,7 +133,7 @@ extension WishCalendarViewController: UICollectionViewDataSource {
         collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return Const.numberOfItems
+        return events.count
     }
     func collectionView(
         _
@@ -101,14 +145,10 @@ extension WishCalendarViewController: UICollectionViewDataSource {
         guard let wishEventCell = cell as? WishEventCell else {
             return cell
         }
-        wishEventCell.configure(
-            with: WishEventModel(
-                title: "Test",
-                description: "Test description",
-                startDate: "Start date",
-                endDate: "End date"
-            )
-        )
+        
+        let event = events[indexPath.row]
+        wishEventCell.configure(with: event)
+        
         return cell
     }
 }
