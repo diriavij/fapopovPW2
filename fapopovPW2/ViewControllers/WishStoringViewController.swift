@@ -40,7 +40,7 @@ final class WishStoringViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Const.backgroundColor
+        view.backgroundColor = WishMakerViewController.currentColor
         wishArray = defaults.array(forKey: Const.userDefaultsKey) as? [String] ?? []
         configureTable()
     }
@@ -49,7 +49,7 @@ final class WishStoringViewController: UIViewController {
     
     private func configureTable() {
         view.addSubview(table)
-        table.backgroundColor = Const.tableBackgroundColor
+        table.backgroundColor = WishMakerViewController.currentColor
         table.dataSource = self
         table.separatorStyle = .none
         table.layer.cornerRadius = Const.tableCornerRadius

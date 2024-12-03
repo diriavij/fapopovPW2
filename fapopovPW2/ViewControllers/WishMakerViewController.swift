@@ -23,7 +23,7 @@ class WishMakerViewController: UIViewController {
     private let addWishButton: UIButton = UIButton(type: .system)
     private let scheduleButton: UIButton = UIButton(type: .system)
     
-    private var currentColor = Const.firstColor
+    static var currentColor = Const.firstColor
     
     // MARK: - Constants
     
@@ -169,7 +169,7 @@ class WishMakerViewController: UIViewController {
     private func configureButtons() {
         modeSwitcher.setTitle(Const.switchText, for: .normal)
         modeSwitcher.titleLabel?.textAlignment = NSTextAlignment.center
-        modeSwitcher.setTitleColor(currentColor, for: .normal)
+        modeSwitcher.setTitleColor(WishMakerViewController.currentColor, for: .normal)
         modeSwitcher.titleLabel?.font = UIFont.systemFont(ofSize: Const.subtitleSize, weight: UIFont.Weight(Const.titleWeight))
         modeSwitcher.backgroundColor = Const.buttonBackgroundColor
         modeSwitcher.layer.cornerRadius = Const.cornerRadius
@@ -182,7 +182,7 @@ class WishMakerViewController: UIViewController {
         
         randomButton.setTitle(Const.randomText, for: .normal)
         randomButton.titleLabel?.textAlignment = NSTextAlignment.center
-        randomButton.setTitleColor(currentColor, for: .normal)
+        randomButton.setTitleColor(WishMakerViewController.currentColor, for: .normal)
         randomButton.titleLabel?.font = UIFont.systemFont(ofSize: Const.subtitleSize, weight: UIFont.Weight(Const.titleWeight))
         randomButton.backgroundColor = Const.buttonBackgroundColor
         randomButton.layer.cornerRadius = Const.cornerRadius
@@ -198,7 +198,7 @@ class WishMakerViewController: UIViewController {
     private func slidersChanged(sliderRed: CustomSlider, sliderGreen: CustomSlider, sliderBlue: CustomSlider) {
         let helperColor = UIColor(red: CGFloat(sliderRed.slider.value), green: CGFloat(sliderGreen.slider.value), blue: CGFloat(sliderBlue.slider.value), alpha: Const.alphaValue)
         view.backgroundColor = helperColor
-        currentColor = helperColor
+        WishMakerViewController.currentColor = helperColor
         changeTitlesColor()
         titleView.textColor = view.backgroundColor?.getOpposite()
         descriptionView.textColor = view.backgroundColor?.getOpposite()
@@ -251,7 +251,7 @@ class WishMakerViewController: UIViewController {
         addWishButton.pinHorizontal(to: view, Const.addWishButtonSide)
         
         addWishButton.backgroundColor = .white
-        addWishButton.setTitleColor(currentColor, for: .normal)
+        addWishButton.setTitleColor(WishMakerViewController.currentColor, for: .normal)
         addWishButton.setTitle(Const.addWishText, for: .normal)
         
         addWishButton.layer.cornerRadius = Const.cornerRadius
@@ -265,7 +265,7 @@ class WishMakerViewController: UIViewController {
         scheduleButton.pinHorizontal(to: view, Const.addWishButtonSide)
         
         scheduleButton.backgroundColor = .white
-        scheduleButton.setTitleColor(currentColor, for: .normal)
+        scheduleButton.setTitleColor(WishMakerViewController.currentColor, for: .normal)
         scheduleButton.setTitle(Const.scheduleText, for: .normal)
         
         scheduleButton.layer.cornerRadius = Const.cornerRadius
@@ -275,10 +275,10 @@ class WishMakerViewController: UIViewController {
     // MARK: - Change Buttons' Title Color
     
     private func changeTitlesColor() {
-        scheduleButton.setTitleColor(self.currentColor, for: .normal)
-        addWishButton.setTitleColor(self.currentColor, for: .normal)
-        randomButton.setTitleColor(self.currentColor, for: .normal)
-        modeSwitcher.setTitleColor(self.currentColor, for: .normal)
+        scheduleButton.setTitleColor(WishMakerViewController.currentColor, for: .normal)
+        addWishButton.setTitleColor(WishMakerViewController.currentColor, for: .normal)
+        randomButton.setTitleColor(WishMakerViewController.currentColor, for: .normal)
+        modeSwitcher.setTitleColor(WishMakerViewController.currentColor, for: .normal)
     }
     
     
@@ -321,7 +321,7 @@ class WishMakerViewController: UIViewController {
         if hexField.text?.count == Const.hexColorLength {
             let newColor = UIColor.convertToRGBInit(hexField.text ?? Const.basicHex)
             view.backgroundColor = newColor
-            currentColor = newColor
+            WishMakerViewController.currentColor = newColor
             changeTitlesColor()
             titleView.textColor = newColor.getOpposite()
             descriptionView.textColor = newColor.getOpposite()
@@ -338,7 +338,7 @@ class WishMakerViewController: UIViewController {
             hexColor += Const.digitsHex[index]
         }
         let newColor: UIColor = UIColor.convertToRGBInit(hexColor)
-        currentColor = newColor
+        WishMakerViewController.currentColor = newColor
         changeTitlesColor()
         view.backgroundColor = newColor
         titleView.textColor = newColor.getOpposite()
