@@ -32,7 +32,7 @@ class WishMakerViewController: UIViewController {
         static let basicHex: String = "FFFFFF"
         static let digitsHex: [String] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"]
         
-        static let descriptionText: String = "Make your wish, \nThis app will help it come true! \n First of all, you need to change the \nbackground color"
+        static let descriptionText: String = "Make your wish, \nThis app will help it come true! \n First of all, you need to change the background color"
         static let fieldText: String = "Enter HEX value (without #):"
         static let switchText: String = "Switch Mode"
         static let randomText: String = "RANDOM COLOR"
@@ -312,7 +312,8 @@ class WishMakerViewController: UIViewController {
     
     @objc
     private func scheduleButtonPressed() {
-        
+        let vc = WishCalendarViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc
